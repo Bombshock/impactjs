@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="style.css" rel="stylesheet">
+    <style>
+        li.animation-add {
+            transition: all ease-in-out;
+            opacity: 0;
+            margin-bottom: -60px;
+        }
+
+        li.animation-add.animating {
+            opacity: 1;
+            margin-bottom: 0;
+        }
+
+        li.animation-remove {
+            transition: all ease-in-out;
+            opacity: 1;
+        }
+
+        li.animation-remove.animating {
+            opacity: 0;
+            margin-bottom: -59px;
+        }
+
+        #todoapp.animation-add {
+            transition: all ease-in-out;
+            opacity: 0;
+            transform: translate3d(0, -10px, 0);
+        }
+
+        #todoapp.animation-add.animating {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        #todo-list li {
+            background-color: #FFF;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- IMPACT -->
+    <script src="../dist/impact.es6.js"></script>
+    <!-- APP -->
+    <script src="components.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
