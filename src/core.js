@@ -257,6 +257,8 @@
             return el;
         };
 
+        el.$apply.el = el;
+
         el.broadcast = (event, ...args) => {
             const currentChildNodes = Array.prototype.slice.call(el.childNodes);
             listener[event] = listener[event] || [];
@@ -545,6 +547,17 @@
         };
     }
 
+    function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(context, args);
+            }, delay);
+        };
+    }
+
     types.forEach((type) => {
         window[type] = (...args) => createElement(type, ...args);
     });
@@ -560,6 +573,7 @@
     namespace.off = eventOff;
     namespace.emit = eventEmit;
     namespace.createElement = createElement;
-    namespace.apply = applyRoot;
+    namespace.debounce = debounce;
+    namespace.apply = debounce(applyRoot, 5);
 
 })(window.impact = {});

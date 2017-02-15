@@ -1,4 +1,3 @@
-
 (function (namespace) {
     "use strict";
 
@@ -9,7 +8,9 @@
         }
 
         if (!controller && !namespace.components[name]) {
-            throw new Error("impact.component(name, controller), can't find component with name '" + name + "'");
+            let err = new Error("impact.component(name), can't find component with name '" + name + "'");
+            console.error(err);
+            return () => {};
         }
 
         if (controller) {
@@ -40,16 +41,18 @@
             }
         }
 
-        function watcher() {
+        function watcher(apply) {
             let now = getComparatorValue(item);
             if (last != now) {
                 last = now;
                 cb();
-                namespace.apply();
+                if (apply !== false) {
+                    namespace.apply();
+                }
             }
         }
 
-        watcher();
+        watcher(false);
         namespace.on("apply", watcher);
         return () => {
             namespace.off("apply", watcher);

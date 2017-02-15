@@ -1,6 +1,6 @@
 /*!
 impact-js - v0.0.1
-11.01.2017
+15.02.2017
 License: MIT
 */
 //src/core.js
@@ -262,6 +262,8 @@ License: MIT
             handleChildren(el, children);
             return el;
         };
+
+        el.$apply.el = el;
 
         el.broadcast = (event, ...args) => {
             const currentChildNodes = Array.prototype.slice.call(el.childNodes);
@@ -551,6 +553,17 @@ License: MIT
         };
     }
 
+    function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(context, args);
+            }, delay);
+        };
+    }
+
     types.forEach((type) => {
         window[type] = (...args) => createElement(type, ...args);
     });
@@ -566,9 +579,37 @@ License: MIT
     namespace.off = eventOff;
     namespace.emit = eventEmit;
     namespace.createElement = createElement;
-    namespace.apply = applyRoot;
+    namespace.debounce = debounce;
+    namespace.apply = debounce(applyRoot, 5);
 
 })(window.impact = {});
+
+//src/elements/a.js
+
+(function (namespace) {
+    "use strict";
+
+    window.a = (...args) => {
+        var apply = impact.createElement("a", ...args);
+        var el = apply();
+
+        el.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            let prefix = namespace.router.isHtml5Mode() ? "" : "#";
+            let href = el.attributes.item("href").nodeValue;
+            window.history.pushState({}, "", prefix + href);
+        });
+
+        if (typeof el.onclick === "function") {
+            el.addEventListener("click", el.onclick);
+            el.onclick = undefined;
+        }
+
+        return apply;
+    };
+
+})(window.impact);
 
 //src/elements/form.js
 
@@ -620,8 +661,43 @@ License: MIT
 
 })(impact);
 
-//src/util.js
+//src/router.js
 
+(function (namespace) {
+    "use strict";
+
+    let html5Mode = false;
+    const routes = {};
+
+    function getCurrentURL() {
+        if (html5Mode) {
+            return window.location.pathname;
+        } else {
+            return window.location.hash.substr(1);
+        }
+    }
+
+    /**
+     * @param key the key for this Configuration. Causes the nesting with a dotnotation.
+     * @param config the confugration for this state. Can have the following options:
+     *          # url <string>: url chunk for the given state. Trailing and leading slashes will be stripped
+     *          # component <string>: name of the component to be rendered
+     *          # args <fn|array|object>: arguments for the component to be instantiated with
+     *          # views <key, object>: named objects for sub views, can have `component` and `args` attributes
+     */
+
+    function add(key, config) {
+        var keys = key.split(".");
+    }
+
+    namespace.html5Mode = (val) => html5Mode = !!val;
+    namespace.isHtml5Mode = () => html5Mode;
+    namespace.add = add;
+    namespace.getCurrentURL = getCurrentURL;
+
+})(window.impact.router = {});
+
+//src/util.js
 (function (namespace) {
     "use strict";
 
@@ -632,7 +708,9 @@ License: MIT
         }
 
         if (!controller && !namespace.components[name]) {
-            throw new Error("impact.component(name, controller), can't find component with name '" + name + "'");
+            let err = new Error("impact.component(name), can't find component with name '" + name + "'");
+            console.error(err);
+            return () => {};
         }
 
         if (controller) {
@@ -663,16 +741,18 @@ License: MIT
             }
         }
 
-        function watcher() {
+        function watcher(apply) {
             let now = getComparatorValue(item);
             if (last != now) {
                 last = now;
                 cb();
-                namespace.apply();
+                if (apply !== false) {
+                    namespace.apply();
+                }
             }
         }
 
-        watcher();
+        watcher(false);
         namespace.on("apply", watcher);
         return () => {
             namespace.off("apply", watcher);

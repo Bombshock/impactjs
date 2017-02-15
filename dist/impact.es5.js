@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /*!
 impact-js - v0.0.1
-11.01.2017
+15.02.2017
 License: MIT
 */
 //src/core.js
@@ -177,6 +177,8 @@ License: MIT
             handleChildren(el, children);
             return el;
         };
+
+        el.$apply.el = el;
 
         el.broadcast = function (event) {
             for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
@@ -498,6 +500,18 @@ License: MIT
         };
     }
 
+    function debounce(fn, delay) {
+        var timer = null;
+        return function () {
+            var context = this,
+                args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                fn.apply(context, args);
+            }, delay);
+        };
+    }
+
     types.forEach(function (type) {
         window[type] = function () {
             for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
@@ -519,8 +533,41 @@ License: MIT
     namespace.off = eventOff;
     namespace.emit = eventEmit;
     namespace.createElement = createElement;
-    namespace.apply = applyRoot;
+    namespace.debounce = debounce;
+    namespace.apply = debounce(applyRoot, 5);
 })(window.impact = {});
+
+//src/elements/a.js
+
+(function (namespace) {
+    "use strict";
+
+    window.a = function () {
+        var _impact;
+
+        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
+            args[_key8] = arguments[_key8];
+        }
+
+        var apply = (_impact = impact).createElement.apply(_impact, ["a"].concat(args));
+        var el = apply();
+
+        el.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            var prefix = namespace.router.isHtml5Mode() ? "" : "#";
+            var href = el.attributes.item("href").nodeValue;
+            window.history.pushState({}, "", prefix + href);
+        });
+
+        if (typeof el.onclick === "function") {
+            el.addEventListener("click", el.onclick);
+            el.onclick = undefined;
+        }
+
+        return apply;
+    };
+})(window.impact);
 
 //src/elements/form.js
 
@@ -528,13 +575,13 @@ License: MIT
     "use strict";
 
     window.form = function () {
-        var _impact;
+        var _impact2;
 
-        for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
-            args[_key8] = arguments[_key8];
+        for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
+            args[_key9] = arguments[_key9];
         }
 
-        var apply = (_impact = impact).createElement.apply(_impact, ["form"].concat(args));
+        var apply = (_impact2 = impact).createElement.apply(_impact2, ["form"].concat(args));
         var el = apply();
 
         if (typeof el.onsubmit !== "function") {
@@ -578,8 +625,46 @@ License: MIT
     };
 })(impact);
 
-//src/util.js
+//src/router.js
 
+(function (namespace) {
+    "use strict";
+
+    var html5Mode = false;
+    var routes = {};
+
+    function getCurrentURL() {
+        if (html5Mode) {
+            return window.location.pathname;
+        } else {
+            return window.location.hash.substr(1);
+        }
+    }
+
+    /**
+     * @param key the key for this Configuration. Causes the nesting with a dotnotation.
+     * @param config the confugration for this state. Can have the following options:
+     *          # url <string>: url chunk for the given state. Trailing and leading slashes will be stripped
+     *          # component <string>: name of the component to be rendered
+     *          # args <fn|array|object>: arguments for the component to be instantiated with
+     *          # views <key, object>: named objects for sub views, can have `component` and `args` attributes
+     */
+
+    function add(key, config) {
+        var keys = key.split(".");
+    }
+
+    namespace.html5Mode = function (val) {
+        return html5Mode = !!val;
+    };
+    namespace.isHtml5Mode = function () {
+        return html5Mode;
+    };
+    namespace.add = add;
+    namespace.getCurrentURL = getCurrentURL;
+})(window.impact.router = {});
+
+//src/util.js
 (function (namespace) {
     "use strict";
 
@@ -590,7 +675,9 @@ License: MIT
         }
 
         if (!controller && !namespace.components[name]) {
-            throw new Error("impact.component(name, controller), can't find component with name '" + name + "'");
+            var err = new Error("impact.component(name), can't find component with name '" + name + "'");
+            console.error(err);
+            return function () {};
         }
 
         if (controller) {
@@ -621,16 +708,18 @@ License: MIT
             }
         }
 
-        function watcher() {
+        function watcher(apply) {
             var now = getComparatorValue(item);
             if (last != now) {
                 last = now;
                 cb();
-                namespace.apply();
+                if (apply !== false) {
+                    namespace.apply();
+                }
             }
         }
 
-        watcher();
+        watcher(false);
         namespace.on("apply", watcher);
         return function () {
             namespace.off("apply", watcher);
