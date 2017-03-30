@@ -63,4 +63,4 @@
     namespace.component = component;
     namespace.components = {};
 
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact);

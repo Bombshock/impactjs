@@ -1,8 +1,7 @@
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.a = (...args) => {
+    global.a = (...args) => {
         var apply = impact.createElement("a", ...args);
         var el = apply();
 
@@ -22,4 +21,4 @@
         return apply;
     };
 
-})(window.impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);

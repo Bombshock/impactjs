@@ -1,4 +1,4 @@
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     const events = {};
@@ -383,10 +383,10 @@
             el.classList.remove(actionClass);
             el.classList.add(baseClass);
 
-            window.requestAnimationFrame(() => {
+            global.requestAnimationFrame(() => {
                 el.classList.add(actionClass);
                 setTimeout(() => {
-                    window.requestAnimationFrame(() => {
+                    global.requestAnimationFrame(() => {
                         el.classList.remove(baseClass);
                         el.classList.remove(actionClass);
                         el.style.transitionDuration = "";
@@ -560,7 +560,7 @@
     }
 
     types.forEach((type) => {
-        window[type] = (...args) => createElement(type, ...args);
+        global[type] = (...args) => createElement(type, ...args);
     });
 
     namespace.repeat = repeat;
@@ -577,4 +577,4 @@
     namespace.debounce = debounce;
     namespace.apply = debounce(applyRoot, 5);
 
-})(window.impact = {});
+})(typeof module !== "undefined" ? module.exports : window.impact = {}, typeof module !== "undefined" ? global : window);

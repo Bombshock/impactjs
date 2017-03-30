@@ -4,7 +4,7 @@ impact-js - v0.0.1
 License: MIT
 */
 //src/core.js
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     const events = {};
@@ -389,10 +389,10 @@ License: MIT
             el.classList.remove(actionClass);
             el.classList.add(baseClass);
 
-            window.requestAnimationFrame(() => {
+            global.requestAnimationFrame(() => {
                 el.classList.add(actionClass);
                 setTimeout(() => {
-                    window.requestAnimationFrame(() => {
+                    global.requestAnimationFrame(() => {
                         el.classList.remove(baseClass);
                         el.classList.remove(actionClass);
                         el.style.transitionDuration = "";
@@ -566,7 +566,7 @@ License: MIT
     }
 
     types.forEach((type) => {
-        window[type] = (...args) => createElement(type, ...args);
+        global[type] = (...args) => createElement(type, ...args);
     });
 
     namespace.repeat = repeat;
@@ -583,14 +583,13 @@ License: MIT
     namespace.debounce = debounce;
     namespace.apply = debounce(applyRoot, 5);
 
-})(window.impact = {});
+})(typeof module !== "undefined" ? module.exports : window.impact = {}, typeof module !== "undefined" ? global : window);
 
 //src/elements/a.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.a = (...args) => {
+    global.a = (...args) => {
         var apply = impact.createElement("a", ...args);
         var el = apply();
 
@@ -610,14 +609,13 @@ License: MIT
         return apply;
     };
 
-})(window.impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/elements/form.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.form = (...args) => {
+    global.form = (...args) => {
         var apply = impact.createElement("form", ...args);
         var el = apply();
 
@@ -628,14 +626,13 @@ License: MIT
         return apply;
     };
 
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/elements/input.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.input = (props) => {
+    global.input = (props) => {
         var keyPressListener = props.onkeypress || {};
         delete props.onkeypress;
 
@@ -651,7 +648,7 @@ License: MIT
 
         el.$value = (val) => {
             if (typeof val !== "undefined") {
-                el.value = `${val}`
+                el.value = `${val}`;
             } else {
                 return `${el.value}`.trim();
             }
@@ -660,11 +657,10 @@ License: MIT
         return apply;
     };
 
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/router.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     let html5Mode = false;
@@ -672,9 +668,9 @@ License: MIT
 
     function getCurrentURL() {
         if (html5Mode) {
-            return window.location.pathname;
+            return global.location.pathname;
         } else {
-            return window.location.hash.substr(1);
+            return global.location.hash.substr(1);
         }
     }
 
@@ -696,7 +692,7 @@ License: MIT
     namespace.add = add;
     namespace.getCurrentURL = getCurrentURL;
 
-})(window.impact.router = {});
+})(typeof module !== "undefined" ? module.exports.router = {} : window.impact.router = {}, typeof module !== "undefined" ? global : window);
 
 //src/util.js
 (function (namespace) {
@@ -764,4 +760,4 @@ License: MIT
     namespace.component = component;
     namespace.components = {};
 
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact);

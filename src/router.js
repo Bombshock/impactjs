@@ -1,5 +1,4 @@
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     let html5Mode = false;
@@ -7,9 +6,9 @@
 
     function getCurrentURL() {
         if (html5Mode) {
-            return window.location.pathname;
+            return global.location.pathname;
         } else {
-            return window.location.hash.substr(1);
+            return global.location.hash.substr(1);
         }
     }
 
@@ -31,4 +30,4 @@
     namespace.add = add;
     namespace.getCurrentURL = getCurrentURL;
 
-})(window.impact.router = {});
+})(typeof module !== "undefined" ? module.exports.router = {} : window.impact.router = {}, typeof module !== "undefined" ? global : window);

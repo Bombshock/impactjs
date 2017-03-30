@@ -1,8 +1,7 @@
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.input = (props) => {
+    global.input = (props) => {
         var keyPressListener = props.onkeypress || {};
         delete props.onkeypress;
 
@@ -18,7 +17,7 @@
 
         el.$value = (val) => {
             if (typeof val !== "undefined") {
-                el.value = `${val}`
+                el.value = `${val}`;
             } else {
                 return `${el.value}`.trim();
             }
@@ -27,4 +26,4 @@
         return apply;
     };
 
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);

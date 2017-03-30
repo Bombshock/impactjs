@@ -8,7 +8,7 @@ impact-js - v0.0.1
 License: MIT
 */
 //src/core.js
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     var events = {};
@@ -309,10 +309,10 @@ License: MIT
                 el.classList.remove(actionClass);
                 el.classList.add(baseClass);
 
-                window.requestAnimationFrame(function () {
+                global.requestAnimationFrame(function () {
                     el.classList.add(actionClass);
                     setTimeout(function () {
-                        window.requestAnimationFrame(function () {
+                        global.requestAnimationFrame(function () {
                             el.classList.remove(baseClass);
                             el.classList.remove(actionClass);
                             el.style.transitionDuration = "";
@@ -513,7 +513,7 @@ License: MIT
     }
 
     types.forEach(function (type) {
-        window[type] = function () {
+        global[type] = function () {
             for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
                 args[_key7] = arguments[_key7];
             }
@@ -535,14 +535,13 @@ License: MIT
     namespace.createElement = createElement;
     namespace.debounce = debounce;
     namespace.apply = debounce(applyRoot, 5);
-})(window.impact = {});
+})(typeof module !== "undefined" ? module.exports : window.impact = {}, typeof module !== "undefined" ? global : window);
 
 //src/elements/a.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.a = function () {
+    global.a = function () {
         var _impact;
 
         for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
@@ -567,14 +566,13 @@ License: MIT
 
         return apply;
     };
-})(window.impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/elements/form.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.form = function () {
+    global.form = function () {
         var _impact2;
 
         for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
@@ -592,14 +590,13 @@ License: MIT
 
         return apply;
     };
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/elements/input.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
-    window.input = function (props) {
+    global.input = function (props) {
         var keyPressListener = props.onkeypress || {};
         delete props.onkeypress;
 
@@ -623,11 +620,10 @@ License: MIT
 
         return apply;
     };
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
 //src/router.js
-
-(function (namespace) {
+(function (namespace, global) {
     "use strict";
 
     var html5Mode = false;
@@ -635,9 +631,9 @@ License: MIT
 
     function getCurrentURL() {
         if (html5Mode) {
-            return window.location.pathname;
+            return global.location.pathname;
         } else {
-            return window.location.hash.substr(1);
+            return global.location.hash.substr(1);
         }
     }
 
@@ -662,7 +658,7 @@ License: MIT
     };
     namespace.add = add;
     namespace.getCurrentURL = getCurrentURL;
-})(window.impact.router = {});
+})(typeof module !== "undefined" ? module.exports.router = {} : window.impact.router = {}, typeof module !== "undefined" ? global : window);
 
 //src/util.js
 (function (namespace) {
@@ -729,5 +725,5 @@ License: MIT
     namespace.watch = watch;
     namespace.component = component;
     namespace.components = {};
-})(impact);
+})(typeof module !== "undefined" ? module.exports : window.impact);
 //# sourceMappingURL=impact.es5.js.map
