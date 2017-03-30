@@ -4,7 +4,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /*!
 impact-js - v0.0.1
-15.02.2017
+30.03.2017
 License: MIT
 */
 //src/core.js
@@ -345,7 +345,7 @@ License: MIT
     }
 
     function dynamicTextNode(fn) {
-        var node = createTextNode("");
+        var node = namespace.createTextNode("");
         return function () {
             node.nodeValue = "" + fn();
             return node;
