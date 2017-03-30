@@ -374,7 +374,7 @@
         var baseClass = "animation-" + key;
         var actionClass = "animating";
 
-        cb = cb || (() => { });
+        cb = cb || (() => {});
 
         if (animation[key]) {
             let duration = animation[key].duration || defaultDuration;
@@ -416,7 +416,7 @@
     }
 
     function dynamicTextNode(fn) {
-        var node = createTextNode("");
+        var node = namespace.createTextNode("");
         return () => {
             node.nodeValue = `${fn()}`;
             return node;
@@ -550,7 +550,8 @@
     function debounce(fn, delay) {
         var timer = null;
         return function () {
-            var context = this, args = arguments;
+            var context = this,
+                args = arguments;
             clearTimeout(timer);
             timer = setTimeout(function () {
                 fn.apply(context, args);
