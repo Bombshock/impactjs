@@ -157,7 +157,7 @@ if (typeof module !== "undefined") {
             children[_key2 - 2] = arguments[_key2];
         }
 
-        var el = impact.createNode(type);
+        var el = namespace.createNode(type);
         var props = {};
         var listener = {};
 

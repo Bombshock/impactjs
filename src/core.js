@@ -227,7 +227,7 @@
     }
 
     function createElement(type, propsOrChild, ...children) {
-        var el = impact.createNode(type);
+        var el = namespace.createNode(type);
         var props = {};
         var listener = {};
 
