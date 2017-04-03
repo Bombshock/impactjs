@@ -1,10 +1,11 @@
-
 (function () {
     "use strict";
 
-    impact.render(impact.root,
+    impact.render(document.body,
         impact.component("app")(),
-        footer({ id: "info" },
+        footer({
+                id: "info"
+            },
             a({
                 href: "https://github.com/tastejs/todomvc",
                 target: "_blank"

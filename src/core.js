@@ -565,7 +565,6 @@
 
     namespace.repeat = repeat;
     namespace.if = impIf;
-    namespace.root = document.body;
     namespace.createNode = createNode;
     namespace.createTextNode = createTextNode;
     namespace.render = render;
