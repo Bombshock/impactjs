@@ -5,10 +5,10 @@ License: MIT
 */
 //src/frame.js
 let namespace = {};
-namespace.global = {};
 
 if (typeof module !== "undefined") {
     module.exports = namespace;
+    namespace.global = global;
 } else {
     window.impact = namespace;
     namespace.global = window;
