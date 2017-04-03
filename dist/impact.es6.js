@@ -596,11 +596,11 @@ if (typeof module !== "undefined") {
 })();
 
 //src/elements/a.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.a = (...args) => {
-        var apply = impact.createElement("a", ...args);
+    namespace.global.a = (...args) => {
+        var apply = namespace.createElement("a", ...args);
         var el = apply();
 
         el.addEventListener("click", (event) => {
@@ -619,14 +619,14 @@ if (typeof module !== "undefined") {
         return apply;
     };
 
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/form.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.form = (...args) => {
-        var apply = impact.createElement("form", ...args);
+    namespace.global.form = (...args) => {
+        var apply = namespace.createElement("form", ...args);
         var el = apply();
 
         if (typeof el.onsubmit !== "function") {
@@ -636,25 +636,25 @@ if (typeof module !== "undefined") {
         return apply;
     };
 
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/input.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.input = (props) => {
+    namespace.global.input = (props) => {
         var keyPressListener = props.onkeypress || {};
         delete props.onkeypress;
 
-        var apply = impact.createElement("input", props);
+        var apply = namespace.createElement("input", props);
         var el = apply();
 
         el.onkeypress = (event) => {
             if (keyPressListener[event.keyCode]) {
                 keyPressListener[event.keyCode].call(el, event);
-                impact.apply();
+                namespace.apply();
             }
-        }
+        };
 
         el.$value = (val) => {
             if (typeof val !== "undefined") {
@@ -662,12 +662,12 @@ if (typeof module !== "undefined") {
             } else {
                 return `${el.value}`.trim();
             }
-        }
+        };
 
         return apply;
     };
 
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/util.js
 (function () {

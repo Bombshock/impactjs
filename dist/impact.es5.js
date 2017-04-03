@@ -548,17 +548,15 @@ if (typeof module !== "undefined") {
 })();
 
 //src/elements/a.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.a = function () {
-        var _impact;
-
+    namespace.global.a = function () {
         for (var _len8 = arguments.length, args = Array(_len8), _key8 = 0; _key8 < _len8; _key8++) {
             args[_key8] = arguments[_key8];
         }
 
-        var apply = (_impact = impact).createElement.apply(_impact, ["a"].concat(args));
+        var apply = namespace.createElement.apply(namespace, ["a"].concat(args));
         var el = apply();
 
         el.addEventListener("click", function (event) {
@@ -576,20 +574,18 @@ if (typeof module !== "undefined") {
 
         return apply;
     };
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/form.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.form = function () {
-        var _impact2;
-
+    namespace.global.form = function () {
         for (var _len9 = arguments.length, args = Array(_len9), _key9 = 0; _key9 < _len9; _key9++) {
             args[_key9] = arguments[_key9];
         }
 
-        var apply = (_impact2 = impact).createElement.apply(_impact2, ["form"].concat(args));
+        var apply = namespace.createElement.apply(namespace, ["form"].concat(args));
         var el = apply();
 
         if (typeof el.onsubmit !== "function") {
@@ -600,23 +596,23 @@ if (typeof module !== "undefined") {
 
         return apply;
     };
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/input.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.input = function (props) {
+    namespace.global.input = function (props) {
         var keyPressListener = props.onkeypress || {};
         delete props.onkeypress;
 
-        var apply = impact.createElement("input", props);
+        var apply = namespace.createElement("input", props);
         var el = apply();
 
         el.onkeypress = function (event) {
             if (keyPressListener[event.keyCode]) {
                 keyPressListener[event.keyCode].call(el, event);
-                impact.apply();
+                namespace.apply();
             }
         };
 
@@ -630,7 +626,7 @@ if (typeof module !== "undefined") {
 
         return apply;
     };
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
 
 //src/util.js
 (function () {

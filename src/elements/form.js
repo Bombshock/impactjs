@@ -1,8 +1,8 @@
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.form = (...args) => {
-        var apply = impact.createElement("form", ...args);
+    namespace.global.form = (...args) => {
+        var apply = namespace.createElement("form", ...args);
         var el = apply();
 
         if (typeof el.onsubmit !== "function") {
@@ -12,4 +12,4 @@
         return apply;
     };
 
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();

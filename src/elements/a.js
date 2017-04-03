@@ -1,8 +1,8 @@
-(function (namespace, global) {
+(function () {
     "use strict";
 
-    global.a = (...args) => {
-        var apply = impact.createElement("a", ...args);
+    namespace.global.a = (...args) => {
+        var apply = namespace.createElement("a", ...args);
         var el = apply();
 
         el.addEventListener("click", (event) => {
@@ -21,4 +21,4 @@
         return apply;
     };
 
-})(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
+})();
