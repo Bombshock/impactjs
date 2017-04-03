@@ -1,10 +1,21 @@
 /*!
 impact-js - v0.0.1
-30.03.2017
+03.04.2017
 License: MIT
 */
+//src/frame.js
+let namespace = {};
+namespace.global = {};
+
+if (typeof module !== "undefined") {
+    module.exports = namespace;
+} else {
+    window.impact = namespace;
+    namespace.global = window;
+};
+
 //src/core.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
     const events = {};
@@ -389,10 +400,10 @@ License: MIT
             el.classList.remove(actionClass);
             el.classList.add(baseClass);
 
-            global.requestAnimationFrame(() => {
+            namespace.global.requestAnimationFrame(() => {
                 el.classList.add(actionClass);
                 setTimeout(() => {
-                    global.requestAnimationFrame(() => {
+                    namespace.global.requestAnimationFrame(() => {
                         el.classList.remove(baseClass);
                         el.classList.remove(actionClass);
                         el.style.transitionDuration = "";
@@ -566,7 +577,7 @@ License: MIT
     }
 
     types.forEach((type) => {
-        global[type] = (...args) => createElement(type, ...args);
+        namespace.global[type] = (...args) => createElement(type, ...args);
     });
 
     namespace.repeat = repeat;
@@ -583,7 +594,7 @@ License: MIT
     namespace.debounce = debounce;
     namespace.apply = debounce(applyRoot, 5);
 
-})(typeof module !== "undefined" ? module.exports : window.impact = {}, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/a.js
 (function (namespace, global) {
@@ -659,43 +670,8 @@ License: MIT
 
 })(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
-//src/router.js
-(function (namespace, global) {
-    "use strict";
-
-    let html5Mode = false;
-    const routes = {};
-
-    function getCurrentURL() {
-        if (html5Mode) {
-            return global.location.pathname;
-        } else {
-            return global.location.hash.substr(1);
-        }
-    }
-
-    /**
-     * @param key the key for this Configuration. Causes the nesting with a dotnotation.
-     * @param config the confugration for this state. Can have the following options:
-     *          # url <string>: url chunk for the given state. Trailing and leading slashes will be stripped
-     *          # component <string>: name of the component to be rendered
-     *          # args <fn|array|object>: arguments for the component to be instantiated with
-     *          # views <key, object>: named objects for sub views, can have `component` and `args` attributes
-     */
-
-    function add(key, config) {
-        var keys = key.split(".");
-    }
-
-    namespace.html5Mode = (val) => html5Mode = !!val;
-    namespace.isHtml5Mode = () => html5Mode;
-    namespace.add = add;
-    namespace.getCurrentURL = getCurrentURL;
-
-})(typeof module !== "undefined" ? module.exports.router = {} : window.impact.router = {}, typeof module !== "undefined" ? global : window);
-
 //src/util.js
-(function (namespace) {
+(function () {
     "use strict";
 
     function component(name, controller) {
@@ -760,4 +736,4 @@ License: MIT
     namespace.component = component;
     namespace.components = {};
 
-})(typeof module !== "undefined" ? module.exports : window.impact);
+})();

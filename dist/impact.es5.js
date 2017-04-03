@@ -4,11 +4,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 /*!
 impact-js - v0.0.1
-30.03.2017
+03.04.2017
 License: MIT
 */
+//src/frame.js
+var namespace = {};
+namespace.global = {};
+
+if (typeof module !== "undefined") {
+    module.exports = namespace;
+} else {
+    window.impact = namespace;
+    namespace.global = window;
+};
+
 //src/core.js
-(function (namespace, global) {
+(function () {
     "use strict";
 
     var events = {};
@@ -309,10 +320,10 @@ License: MIT
                 el.classList.remove(actionClass);
                 el.classList.add(baseClass);
 
-                global.requestAnimationFrame(function () {
+                namespace.global.requestAnimationFrame(function () {
                     el.classList.add(actionClass);
                     setTimeout(function () {
-                        global.requestAnimationFrame(function () {
+                        namespace.global.requestAnimationFrame(function () {
                             el.classList.remove(baseClass);
                             el.classList.remove(actionClass);
                             el.style.transitionDuration = "";
@@ -513,7 +524,7 @@ License: MIT
     }
 
     types.forEach(function (type) {
-        global[type] = function () {
+        namespace.global[type] = function () {
             for (var _len7 = arguments.length, args = Array(_len7), _key7 = 0; _key7 < _len7; _key7++) {
                 args[_key7] = arguments[_key7];
             }
@@ -535,7 +546,7 @@ License: MIT
     namespace.createElement = createElement;
     namespace.debounce = debounce;
     namespace.apply = debounce(applyRoot, 5);
-})(typeof module !== "undefined" ? module.exports : window.impact = {}, typeof module !== "undefined" ? global : window);
+})();
 
 //src/elements/a.js
 (function (namespace, global) {
@@ -622,46 +633,8 @@ License: MIT
     };
 })(typeof module !== "undefined" ? module.exports : window.impact, typeof module !== "undefined" ? global : window);
 
-//src/router.js
-(function (namespace, global) {
-    "use strict";
-
-    var html5Mode = false;
-    var routes = {};
-
-    function getCurrentURL() {
-        if (html5Mode) {
-            return global.location.pathname;
-        } else {
-            return global.location.hash.substr(1);
-        }
-    }
-
-    /**
-     * @param key the key for this Configuration. Causes the nesting with a dotnotation.
-     * @param config the confugration for this state. Can have the following options:
-     *          # url <string>: url chunk for the given state. Trailing and leading slashes will be stripped
-     *          # component <string>: name of the component to be rendered
-     *          # args <fn|array|object>: arguments for the component to be instantiated with
-     *          # views <key, object>: named objects for sub views, can have `component` and `args` attributes
-     */
-
-    function add(key, config) {
-        var keys = key.split(".");
-    }
-
-    namespace.html5Mode = function (val) {
-        return html5Mode = !!val;
-    };
-    namespace.isHtml5Mode = function () {
-        return html5Mode;
-    };
-    namespace.add = add;
-    namespace.getCurrentURL = getCurrentURL;
-})(typeof module !== "undefined" ? module.exports.router = {} : window.impact.router = {}, typeof module !== "undefined" ? global : window);
-
 //src/util.js
-(function (namespace) {
+(function () {
     "use strict";
 
     function component(name, controller) {
@@ -725,5 +698,5 @@ License: MIT
     namespace.watch = watch;
     namespace.component = component;
     namespace.components = {};
-})(typeof module !== "undefined" ? module.exports : window.impact);
+})();
 //# sourceMappingURL=impact.es5.js.map

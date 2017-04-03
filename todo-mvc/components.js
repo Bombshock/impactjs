@@ -1,15 +1,16 @@
-
 (function () {
     "use strict";
 
     let items = [];
     let editedTodo;
-    let status = impact.router.getCurrentURL().replace(/^\//, "");
+    let status = null;
     let completeCount = 0;
     let sortedAndFiltered = [];
 
     for (let i = 0; i < 10; i++) {
-        items.push({ label: `${i}` });
+        items.push({
+            label: `${i}`
+        });
     }
 
     impact.watch(() => items, sortItems, true);
@@ -48,26 +49,35 @@
     }
 
     impact.component("app", () => {
-        return section(
-            {
+        return section({
                 id: "todoapp",
-                animation: { add: true }
+                animation: {
+                    add: true
+                }
             },
-            header({ id: "header" },
+            header({
+                    id: "header"
+                },
                 h1("todos"),
                 TodoInput()
             ),
             impact.if(() => items.length,
-                section({ id: "main" },
+                section({
+                        id: "main"
+                    },
                     input({
                         id: "toggle-all",
                         type: "checkbox",
                         onchange: toggleAll,
                         checked: () => completeCount == items.length
                     }),
-                    label({ for: "toggle-all" },
+                    label({
+                            for: "toggle-all"
+                        },
                         "Mark all as complete"),
-                    ul({ id: "todo-list" },
+                    ul({
+                            id: "todo-list"
+                        },
                         impact.repeat(() => sortedAndFiltered, TodoItem)
                     )
                 )
@@ -76,24 +86,41 @@
         );
     });
 
-    const todoStates = [
-        { key: "", value: "All" },
-        { key: "active", value: "Active" },
-        { key: "completed", value: "Completed" }
+    const todoStates = [{
+            key: "",
+            value: "All"
+        },
+        {
+            key: "active",
+            value: "Active"
+        },
+        {
+            key: "completed",
+            value: "Completed"
+        }
     ];
 
     function TodoFooter() {
         return impact.if(() => items.length,
-            footer({ id: "footer" },
-                span({ id: "todo-count" },
+            footer({
+                    id: "footer"
+                },
+                span({
+                        id: "todo-count"
+                    },
                     strong(impact.text(() => (items.length - completeCount))),
                     impact.text(() => (items.length - completeCount) > 1 ? ' items left' : ' item left')
                 ),
-                ul({ id: "filters" },
+                ul({
+                        id: "filters"
+                    },
                     impact.repeat(todoStates, TodoStateLink)
                 ),
                 impact.if(() => completeCount,
-                    button({ id: "clear-completed", onclick: clearCompleted }, "Clear completed")
+                    button({
+                        id: "clear-completed",
+                        onclick: clearCompleted
+                    }, "Clear completed")
                 )
             )
         );
@@ -101,7 +128,13 @@
 
     function TodoStateLink(state) {
         return li(
-            a({ href: "/" + state.key, class: { selected: () => status === state.key }, onclick: () => status = state.key }, state.value)
+            a({
+                href: "/" + state.key,
+                class: {
+                    selected: () => status === state.key
+                },
+                onclick: () => status = state.key
+            }, state.value)
         );
     }
 
@@ -134,18 +167,33 @@
             todo.completed = !!this.checked;
         }
 
-        return li(
-            {
-                class: { completed: () => todo.completed, editing: () => todo == editedTodo },
-                animation: { add: true, remove: true }
+        return li({
+                class: {
+                    completed: () => todo.completed, editing: () => todo == editedTodo
+                },
+                animation: {
+                    add: true,
+                    remove: true
+                }
             },
-            div({ class: "view" },
-                input({ class: "toggle", type: "checkbox", onchange: toogle, checked: () => todo.completed }),
-                label(
-                    { ondblclick: activateTodo },
+            div({
+                    class: "view"
+                },
+                input({
+                    class: "toggle",
+                    type: "checkbox",
+                    onchange: toogle,
+                    checked: () => todo.completed
+                }),
+                label({
+                        ondblclick: activateTodo
+                    },
                     impact.text(() => todo.label)
                 ),
-                button({ class: "destroy", onclick: removeItemFromList })
+                button({
+                    class: "destroy",
+                    onclick: removeItemFromList
+                })
             ),
             TodoItemEditForm(todo)
         );
@@ -180,8 +228,7 @@
     }
 
     function TodoInput() {
-        return div(
-            {
+        return div({
                 id: "todo-form"
             },
             input({
@@ -192,7 +239,9 @@
                     13: function () {
                         var val = this.$value();
                         if (val) {
-                            items.push({ label: val });
+                            items.push({
+                                label: val
+                            });
                             this.$value("");
                         }
                     }

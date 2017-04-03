@@ -13,7 +13,7 @@ module.exports = function (grunt) {
                 }
             },
             dist: {
-                src: ['src/core.js', 'src/**/*.js'],
+                src: ['src/frame.js', 'src/core.js', 'src/**/*.js'],
                 dest: 'dist/impact.es6.js'
             }
 

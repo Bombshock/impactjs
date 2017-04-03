@@ -1,4 +1,4 @@
-(function (namespace) {
+(function () {
     "use strict";
 
     function component(name, controller) {
@@ -63,4 +63,4 @@
     namespace.component = component;
     namespace.components = {};
 
-})(typeof module !== "undefined" ? module.exports : window.impact);
+})();
